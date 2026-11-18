@@ -55,7 +55,7 @@ def run(ds, cfg):
             x1, y1 = cx - w / 2, cy - h / 2
             x2, y2 = cx + w / 2, cy + h / 2
             overflow = max(0.0, -x1, -y1, x2 - 1.0, y2 - 1.0)
-            if overflow > overflow_tol:
+            if round(overflow, 9) > overflow_tol:
                 issues.append(
                     Issue(
                         "label_format",
@@ -72,7 +72,7 @@ def run(ds, cfg):
             for prev_line, prev_cls, prev_box in seen_boxes:
                 if prev_cls == cls_id:
                     iou = iou_xywh(box, prev_box)
-                    if iou > dup_box_iou:
+                    if round(iou, 9) > dup_box_iou:
                         issues.append(
                             Issue(
                                 "label_format",
@@ -90,7 +90,7 @@ def run(ds, cfg):
             if size is not None:
                 img_w, img_h = size
                 short_px = min(w * img_w, h * img_h)
-                if short_px < min_box_px:
+                if round(short_px, 9) < min_box_px:
                     issues.append(
                         Issue(
                             "label_format",
@@ -103,7 +103,7 @@ def run(ds, cfg):
                         )
                     )
 
-            if w * h > max_box_frac:
+            if round(w * h, 9) > max_box_frac:
                 issues.append(
                     Issue(
                         "label_format",

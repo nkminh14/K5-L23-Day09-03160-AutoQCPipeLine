@@ -52,6 +52,9 @@ def run(ds, cfg, preds=None):
     iou_loose = c["iou_loose"]
     n_classes = len(ds.classes)
 
+    def cname(idx: int) -> str:
+        return ds.classes[idx] if 0 <= idx < n_classes else str(idx)
+
     issues = []
     for p in ds.image_files():
         stem = p.stem
@@ -96,7 +99,7 @@ def run(ds, cfg, preds=None):
                         WARN,
                         "POSSIBLE_MISSING",
                         stem,
-                        f"model dự đoán lớp {ds.classes[r_cls]} (conf={r_conf:.2f}) nhưng chưa có nhãn",
+                        f"model dự đoán lớp {cname(r_cls)} (conf={r_conf:.2f}) nhưng chưa có nhãn",
                         extra={"conf": round(r_conf, 4)},
                     )
                 )
@@ -112,7 +115,7 @@ def run(ds, cfg, preds=None):
                             WARN,
                             "POSSIBLE_LOOSE_BOX",
                             stem,
-                            f"box lớp {ds.classes[r_cls]} lệch so với dự đoán model (IoU={best_same:.2f})",
+                            f"box lớp {cname(r_cls)} lệch so với dự đoán model (IoU={best_same:.2f})",
                             extra={"iou": round(best_same, 4), "conf": round(r_conf, 4)},
                         )
                     )
@@ -125,7 +128,7 @@ def run(ds, cfg, preds=None):
                             WARN,
                             "POSSIBLE_WRONG_CLASS",
                             stem,
-                            f"nhãn gán {ds.classes[best_other_cls]} khác dự đoán {ds.classes[r_cls]} (conf={r_conf:.2f}, IoU={best_other_iou:.2f})",
+                            f"nhãn gán {cname(best_other_cls)} khác dự đoán {cname(r_cls)} (conf={r_conf:.2f}, IoU={best_other_iou:.2f})",
                             extra={"conf": round(r_conf, 4), "iou": round(best_other_iou, 4)},
                         )
                     )
@@ -140,7 +143,7 @@ def run(ds, cfg, preds=None):
                         WARN,
                         "POSSIBLE_FALSE_POS",
                         stem,
-                        f"nhãn lớp {ds.classes[l_cls]} không khớp vật thể nào model thấy (IoU={best_iou:.2f})",
+                        f"nhãn lớp {cname(l_cls)} không khớp vật thể nào model thấy (IoU={best_iou:.2f})",
                         line=line_no,
                         extra={"iou": round(best_iou, 4)},
                     )

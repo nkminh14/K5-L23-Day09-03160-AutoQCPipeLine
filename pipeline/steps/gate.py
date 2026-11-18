@@ -39,7 +39,7 @@ def decide(issues, image_stems, cfg, reviewed=frozenset()):
     if n_errors > 0:
         decision = "Rework"
         reasons.append(f"còn {n_errors} lỗi bắt buộc chưa được xử lý")
-    elif raw_ratio >= hold_thresh:
+    elif round(raw_ratio, 9) >= hold_thresh:
         decision = "Hold"
         reasons.append(
             f"tỉ lệ ảnh còn cảnh báo chưa duyệt là {n_warn_images}/{n_images} ({warn_ratio:.1%}) >= ngưỡng {hold_thresh:.0%}"
